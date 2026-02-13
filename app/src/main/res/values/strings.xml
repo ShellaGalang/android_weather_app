@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">WeatherApp</string>
+    <string name="humidity_label">Humidity</string>
+    <string name="wind_speed_label">Wind Speed</string>
+    <string name="wind_gust_label">Wind Gust</string>
+    <string name="history_title">Weather History</string>
+    <string name="as_of_label">As of</string>
+    <string name="btn_search_label">Search</string>
+    <string name="img_other_details_label">Other Weather Details Icon</string>
+    <string name="img_sunrise_label">Sunrise Icon</string>
+    <string name="img_sunset_label">Sunset Icon</string>
+    <string name="img_blob_bg_label">Blob Background</string>
+</resources>

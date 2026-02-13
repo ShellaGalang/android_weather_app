@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/deep_teal</item>
+
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_icon_wrapper</item>
+
+        <item name="postSplashScreenTheme">@style/Theme.WeatherApp</item>
+    </style>
+
+    <style name="Theme.WeatherApp" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="colorPrimary">@color/deep_teal</item>
+        <item name="android:statusBarColor">@color/light_teal</item>
+    </style>
+</resources>
