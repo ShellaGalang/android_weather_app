@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.first
 /*
 Features:
 - getCurrentWeather() | Source: API
+- getCurrentWeatherByCity | Source: API
 - addWeatherItem() | Destination: Room DB
 - getWeatherHistory() | Source: Room DB
 - getLastSavedWeather() | Source: Room DB

@@ -19,27 +19,38 @@ class FusedLocationProviderImpl(
         suspendCancellableCoroutine { cont ->
             // Request last known location(battery-friendy)
             @SuppressLint("MissingPermission")
-            client.lastLocation
-                // Callback fired when location request succeeds
-                .addOnSuccessListener { location ->
-                    // Success does not guarantee non-null location - hence this checking
-                    if (location != null) {
-                        // Resume suspended coroutine, return Success(lat, lon) to caller
-                        cont.resume(
-                            // Set Sealed Class Success, to be used by the ViewModel
-                            LocationResult.Success(
-                                lat = location.latitude,
-                                lon = location.longitude
+            try {
+                client.lastLocation
+                    // Callback fired when location request succeeds
+                    .addOnSuccessListener { location ->
+                        // Success does not guarantee non-null location - hence this checking
+                        if (location != null) {
+                            // Resume suspended coroutine, return Success(lat, lon) to caller
+                            cont.resume(
+                                // Set Sealed Class Success, to be used by the ViewModel
+                                LocationResult.Success(
+                                    lat = location.latitude,
+                                    lon = location.longitude
+                                )
                             )
-                        )
-                    } else {
-                        // Explicit failure. UI can show Location Unavailable
-                        cont.resume(LocationResult.LocationUnavailable)
+                        } else {
+                            // Explicit failure. UI can show Location Unavailable
+                            cont.resume(LocationResult.LocationUnavailable)
+                        }
                     }
-                }
-                // Any exception during location fetch
-                .addOnFailureListener {
+                    // Any exception during location fetch
+                    .addOnFailureListener { e ->
+                        if (e is SecurityException) {
+                            // Permission Denied
+                            cont.resume(LocationResult.PermissionDenied)
+                        } else {
+                            cont.resume(LocationResult.LocationUnavailable)
+                        }
+                    }
+                } catch (e: Exception) {
+                    // General exception catch
                     cont.resume(LocationResult.LocationUnavailable)
                 }
+
         }
 }

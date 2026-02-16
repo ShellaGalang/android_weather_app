@@ -11,7 +11,6 @@ import com.example.weatherapp.domain.model.CurrentWeatherModel
 import com.example.weatherapp.domain.mapper.mapWeatherDescriptionIcon
 import com.example.weatherapp.data.repository.WeatherRepository
 import com.example.weatherapp.utils.capitalizedWords
-import com.example.weatherapp.utils.formatDate
 import com.example.weatherapp.utils.isNighttime
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -71,7 +70,8 @@ class CurrentWeatherViewModel(
                 loadCurrentWeatherByLatLon(result.lat, result.lon)
             }
             is LocationResult.PermissionDenied -> {
-                _uiState.value = CurrentWeatherUiState.Error("Location Permission Denied!")
+                // Permission Denied used default city to display
+                loadCurrentWeatherByCity("Malolos")
             }
             is LocationResult.LocationUnavailable -> {
                 // Call function that will check if there are available weather history to display that instead
@@ -120,20 +120,24 @@ class CurrentWeatherViewModel(
                 windGust = lastSaved.windGust.toString(),
                 humidity = lastSaved.humidity.toString(),
                 temperatureCelsius = "${lastSaved.temperature.toInt()}°C",
-                sunrise = formatDate(
+                sunrise = formatLongTime(
                     lastSaved.sunrise,
+                    lastSaved.timeZoneOffset,
                     "h:mm a"
                 ),
-                sunset = formatDate(
+                sunset = formatLongTime(
                     lastSaved.sunset,
+                    lastSaved.timeZoneOffset,
                     "h:mm a"
                 ),
-                currentDate = formatDate(
+                currentDate = formatLongTime(
                     lastSaved.timestamp,
+                    lastSaved.timeZoneOffset,
                     "EEEE, dd MMMM"
                 ),
-                currentTime = formatDate(
+                currentTime = formatLongTime(
                     lastSaved.timestamp,
+                    lastSaved.timeZoneOffset,
                     "h:mm a"),
                 mainDescription = lastSaved.mainDescription,
                 weatherIcon = lastSaved.weatherIcon,
