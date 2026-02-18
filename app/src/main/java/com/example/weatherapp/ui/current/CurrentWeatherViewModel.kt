@@ -227,6 +227,26 @@ class CurrentWeatherViewModel(
             }
     }
 
+    /**
+     * Helper function: Set isFromCache to false after showing the Toast Message. Prevents showing the
+     * toast message again, every time the CurrentWeatherScreen is "re-entered"
+     *
+     * Usages: In UI - viewModel.errorShown
+     */
+    fun errorShown() {
+        // Set currentState
+        val currentState = _uiState.value
+
+        // If currentState is sucess
+        if (currentState is CurrentWeatherUiState.Success) {
+            // Create a new version of the state where isFromCache is now false
+            // or the error message is empty
+            _uiState.value = currentState.copy(
+                weatherDetails = currentState.weatherDetails.copy(isFromCache = false)
+            )
+        }
+    }
+
     // Internal factory
     companion object{
         fun provideFactory(

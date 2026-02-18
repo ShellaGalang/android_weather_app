@@ -15,6 +15,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -62,7 +63,11 @@ fun CurrentWeatherScreen(
         SearchBarUI(
             city = city,
             onChange = { city = it },
-            onSearchClick = { viewModel.loadWeather(city) } // On click of search button pass a function that will call loadWeather() from view model
+            onSearchClick = {
+                if (city.isNotBlank()) {
+                    viewModel.loadWeather(city)
+                } // Prevents searching of empty screen
+            } // On click of search button pass a function that will call loadWeather() from view model
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -88,11 +93,18 @@ fun CurrentWeatherScreen(
 
                     is CurrentWeatherUiState.Success -> {
                         // If data is from DB show toast message for the error message
-                        if (state.weatherDetails.isFromCache) {
-                            Toast.makeText(
-                                context,
-                                state.weatherDetails.errorMessage,
-                                Toast.LENGTH_LONG).show()
+                        // Show toast only when the errorMessage changes, not every recomposition
+                        LaunchedEffect(state.weatherDetails.errorMessage) {
+                            if (state.weatherDetails.isFromCache) {
+                                Toast.makeText(
+                                    context,
+                                    state.weatherDetails.errorMessage,
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+
+                            // Tells the ViewModel the error is shown, to rest isFromCache
+                            viewModel.errorShown()
                         }
                         // weatherDetails is of type CurrentWeatherModel(Data class UI structure)
                         CurrentWeatherUIStructure(state.weatherDetails)
