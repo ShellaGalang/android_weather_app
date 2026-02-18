@@ -237,7 +237,7 @@ class CurrentWeatherViewModel(
         // Set currentState
         val currentState = _uiState.value
 
-        // If currentState is sucess
+        // If currentState is success
         if (currentState is CurrentWeatherUiState.Success) {
             // Create a new version of the state where isFromCache is now false
             // or the error message is empty
